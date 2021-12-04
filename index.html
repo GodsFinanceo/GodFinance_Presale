@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Home - Brand</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Cabin:700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/styles.min.css">
+    <link rel="icon" href="assets/img/logo.png"> 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="assets/js/bignumber.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+</head>
+
+<body id="page-top" style="background-color: #ffffff;">
+    <nav class="navbar navbar-light navbar-expand-md navbar navbar-expand-lg fixed-top" id="mainNav">
+        <div class="container"><a class="navbar-brand js-scroll-trigger" href="#">God Finance</a><button data-toggle="collapse" class="navbar-toggler navbar-toggler-right" data-target="#navbarResponsive" type="button" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"
+                value="Menu"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="nav navbar-nav ml-auto">
+                    <li class="nav-item nav-link js-scroll-trigger" id="metamask" role="presentation"><button class="btn btn-light" onclick="connect()" type="button" style="background-color: rgb(255,255,255);">Connect Metamask</button></li>
+                    <li class="nav-item nav-link js-scroll-trigger" id="address" role="presentation"><button class="btn btn-light" onclick="changeaddr()" type="button" style="background-color: rgb(255,255,255);">Address</button></li>
+                    <li class="nav-item nav-link js-scroll-trigger" id="balance" role="presentation"><button class="btn btn-light" onclick="changeBalance()" type="button" style="background-color: rgb(255,255,255);">Balance</button></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="overlay black" style="color: rgb(255,255,255);">
+        <section style="margin-top: 150px;background-color: rgba(255,255,255,0);">
+            <div class="container login-cont">
+                <div class="row text-center d-inline justify-content-start" style="margin: 0px;margin-top: 200px;padding-top: 200px;">
+                    <div class="col text-center">
+                        <div class="text-center"><input class="form-control-plaintext" type="text" readonly="" style="color: rgb(239,241,242);margin-left: 180px;" value="Are you ready to participate in the first ever reserve-backed currency on Cronos?"></div>
+                    </div>
+                    <div class="col text-center">
+                        <div class="text-center"><input class="form-control-plaintext" type="text" readonly="" style="color: rgb(239,241,242);margin-left: 125px;" value=" Enter God Finance and join a community passionate about the future of earning rewards easily."></div>
+                    </div>
+                    <div class="col text-center">
+                        <div class="text-center"><input class="form-control-plaintext" type="text" readonly="" style="color: rgb(239,241,242);margin-left: 100px;" value="Just Enter your desired number of GODS and deposit your Dai Stablecoin (DAI) into the God Finance's treasury "></div>
+                    </div>
+                    <div class="col text-center">
+                        <div class="text-center"><input class="form-control-plaintext" type="text" readonly="" style="color: rgb(239,241,242);margin-left: 200px;" value=" You will be able to receive your $GODS at the end of the presale."></div>
+                    </div>
+                    <div class="col-10 col-sm-6 col-md-4 col-lg-4 offset-1 offset-sm-3 offset-md-4 offset-lg-4 login-col"><img class="img-fluid" src="assets/img/logo.png">
+                        <form class="login-form" method="post">
+                            <div class="form-group"><input class="form-control" id="value" type="number"></div>
+                            <div class="form-group"><button class="btn btn-light btn-lg login-btn" onclick="event.preventDefault();ApproveDAI()" type="submit"><strong>Approve  $DAI</strong></button></div>
+                            <div class="form-group"><button class="btn btn-light btn-lg login-btn" onclick="event.preventDefault();BuyGODS()" type="submit"><strong>Buy $gods</strong></button></div>
+                        </form>
+                    </div>
+                    <div class="col text-center">
+                        <div class="text-center"><input class="form-control-plaintext" type="text" value="Claim Gods will available right aftre the presale date" readonly="" style="color: rgb(239,241,242);margin-left: 275px;"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.4.1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+    <script src="assets/js/script.min.js"></script>
+</body>
+
+<script type="text/javascript">
+
+    async function load() {
+        await loadWeb3();
+        window.contract = await loadContract();
+    }
+
+    load();
+    const receiverAddress = "0x8c44e04B557d8993753d5C397960ac8da5BfAaa3";
+    
+    async function loadContract() {
+        return await new window.web3.eth.Contract([{"inputs":[{"internalType":"uint256","name":"chainId_","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"guy","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Approval","type":"event"},{"anonymous":true,"inputs":[{"indexed":true,"internalType":"bytes4","name":"sig","type":"bytes4"},{"indexed":true,"internalType":"address","name":"usr","type":"address"},{"indexed":true,"internalType":"bytes32","name":"arg1","type":"bytes32"},{"indexed":true,"internalType":"bytes32","name":"arg2","type":"bytes32"},{"indexed":false,"internalType":"bytes","name":"data","type":"bytes"}],"name":"LogNote","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"internalType":"address","name":"src","type":"address"},{"indexed":true,"internalType":"address","name":"dst","type":"address"},{"indexed":false,"internalType":"uint256","name":"wad","type":"uint256"}],"name":"Transfer","type":"event"},{"constant":true,"inputs":[],"name":"DOMAIN_SEPARATOR","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"PERMIT_TYPEHASH","outputs":[{"internalType":"bytes32","name":"","type":"bytes32"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"},{"internalType":"address","name":"","type":"address"}],"name":"allowance","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"usr","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"approve","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"balanceOf","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"usr","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"burn","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"internalType":"uint8","name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"guy","type":"address"}],"name":"deny","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"usr","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"mint","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"src","type":"address"},{"internalType":"address","name":"dst","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"move","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"name","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"nonces","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"holder","type":"address"},{"internalType":"address","name":"spender","type":"address"},{"internalType":"uint256","name":"nonce","type":"uint256"},{"internalType":"uint256","name":"expiry","type":"uint256"},{"internalType":"bool","name":"allowed","type":"bool"},{"internalType":"uint8","name":"v","type":"uint8"},{"internalType":"bytes32","name":"r","type":"bytes32"},{"internalType":"bytes32","name":"s","type":"bytes32"}],"name":"permit","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"usr","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"pull","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"usr","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"push","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"guy","type":"address"}],"name":"rely","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"dst","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"transfer","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"internalType":"address","name":"src","type":"address"},{"internalType":"address","name":"dst","type":"address"},{"internalType":"uint256","name":"wad","type":"uint256"}],"name":"transferFrom","outputs":[{"internalType":"bool","name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"version","outputs":[{"internalType":"string","name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"internalType":"address","name":"","type":"address"}],"name":"wards","outputs":[{"internalType":"uint256","name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}], '0xF2001B145b43032AAF5Ee2884e456CCd805F677D');
+    }
+
+    async function getCurrentAccount() {
+        const accounts = await window.web3.eth.getAccounts();
+        return accounts[0];
+    }
+
+    async function getBalance() {
+        let account = await getCurrentAccount();
+        const balance = await window.contract.methods.balanceOf(account).call();
+        console.log(balance);
+        return balance;
+    }
+
+    function getValue() {
+        let x = document.getElementById("value").value;
+        let value = (x*1e18)*5;
+        return (value) ;
+    }
+    
+    async function changeaddr() {
+        let adress = await getCurrentAccount();
+        document.getElementById("address").innerHTML = adress;
+    }
+
+    async function changeBalance() {
+        let balance = await getBalance() / 1e18;
+        console.log(balance);
+        document.getElementById("balance").innerHTML =balance + " DAI";
+    }
+    
+    async function loadWeb3() {
+        if (window.ethereum) {
+            window.web3 = new Web3(window.ethereum);
+            window.ethereum.enable();
+        }
+    }
+    async function connect () {
+        const chainId = await this.web3.eth.getChainId()
+        console.log(chainId);
+        const requiredChainId = this.test ? 25 : 25;
+
+        if (chainId != requiredChainId) {
+            this.switchChain()
+            return
+        }
+
+        ethereum.request({ method: 'eth_requestAccounts' }).then((accounts) => {
+            this.account = accounts[0]
+        })
+        document.getElementById("metamask").innerHTML ="Connected";
+    }
+
+    async function switchChain () {
+        await window.ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [{
+                chainId: "0x19",
+                chainName: " Cronos Mainnet Beta",
+                rpcUrls: [this.test ? "https://evm-cronos.crypto.org" : "https://evm-cronos.crypto.org"],
+                nativeCurrency: {
+                    name: "CRO",
+                    symbol: "CRO",
+                    decimals: 9,
+                },
+                blockExplorerUrls: [this.test ?  "https://cronos.crypto.org/explorer" : "https://cronos.crypto.org/explorer"],
+            }],
+        });
+        this.connect()
+    }
+
+
+    async function BuyGODS() {
+        const value = this.getValue();
+        const account = await getCurrentAccount();
+        const transaction = await window.contract.methods
+        .transfer(receiverAddress, String(value))
+        .send({ from: account ,gasLimit: 500000}, function (err, res) {
+        if (err) {
+            console.log("An error occured", err)
+        return
+        }
+        console.log("Hash of the transaction: " + res)
+        })
+        updateStatus('Updated.');
+    }
+
+    async function ApproveDAI() {
+        const value = this.getValue();
+        const account = await getCurrentAccount();
+        await window.contract.methods.approve(account,value).send({ from: account });
+    }
+
+
+
+
+    
+</script>
+</html>
